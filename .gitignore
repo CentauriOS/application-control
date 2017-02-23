@@ -30,3 +30,6 @@
 /appctl/appctl
 /init/init
 initrd.img
+
+# Logs
+*.log

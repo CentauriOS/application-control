@@ -1,3 +1,5 @@
+KERNEL=../kernel/linux/arch/x86/boot/bzImage
+
 .PHONY: all
 all: appctl/appctl init/init init/initrd.img
 
@@ -18,3 +20,7 @@ clean:
 	$(MAKE) -C appctl clean
 	$(MAKE) -C common clean
 	$(MAKE) -C init clean
+
+.PHONY: run
+run: init/initrd.img
+	qemu-system-x86_64 -kernel $(KERNEL) -initrd $< -nographic -append "console=ttyS0" | tee serial.log
