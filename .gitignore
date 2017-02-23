@@ -27,3 +27,6 @@
 *.exe
 *.out
 *.app
+/appctl/appctl
+/init/init
+initrd.img
