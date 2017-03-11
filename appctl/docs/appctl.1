@@ -1,0 +1,91 @@
+.TH APPCTL 1
+.SH NAME
+appctl - controls how applications start and interact
+.SH SYNOPSIS
+appctl
+[\fB\-h|\-\-help\fR [\fIcommand\fR]]
+[\fB\-v|\-\-verbose\fR]...
+\fIcommand\fR \fIargument\fR...
+.SH DESCRIPTION
+\fBappctl\fR is the method for applications to set up interactions with each
+other and controls most of the configuration of the system.
+.SH OPTIONS
+.TP
+.BR \-h\fR, " " \fB\-\-help\fR " " [\fIcommand\fR]
+Shows the help ths common options, or shows the help for a single command if a
+command is provided after this argument.
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SH COMMANDS
+.TP
+.BR autostart
+Configures an application to start automatically when the computer boots.
+.TP
+.BR create
+Creates an empty application container.
+.TP
+.BR init
+Launches all of the software on the computer (should only be run once, by the
+system itself).
+.TP
+.BR install
+Installs an application onto this computer from the Internet.
+.TP
+.BR invoke
+Runs a command inside another application container.
+.TP
+.BR mount
+Mounts a drive or creates a link between containers.
+.TP
+.BR pullf
+Reads a file from another application container.
+.TP
+.BR pushf
+Writes a file to another application container.
+.TP
+.BR reload
+Reloads the configuration settings for a service container.
+.TP
+.BR restart
+Stops a service container if it is running, then starts it again.
+.TP
+.BR shutdown
+Shuts down the computer.
+.TP
+.BR start
+Starts a service container that is already installed on this computer.
+.TP
+.BR stop
+Stops a service container.
+.TP
+.BR update
+Updates the software on this computer.
+.TP
+.BR vienv
+Edits the initial environment for the system.
+.TP
+.BR vifstab
+Edits the filesystem table that defines what drives the filesystem is mounted
+from.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_\fICOMMAND\fB_OPTS
+If \fB$APPCLT_\fICOMMAND\fB_OPTS\fR is set, the value of it will be appended to
+the specific options whenever \fICOMMAND\fR is run.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl-autostart\fR(1), " " \fBappctl-create\fR(1),
+.BR appctl-init\fR(1), " " \fBappctl-install\fR(1), " " \fBappctl-invoke\fR(1),
+.BR appctl-mount\fR(1), " " \fBappctl-pullf\fR(1), " " \fBappctl-pushf\fR(1),
+.BR appctl-reload\fR(1), " " \fBappctl-restart\fR(1),
+.BR appctl-shutdown\fR(1), " " \fBappctl-start\fR(1), " " \fBappctl-stop\fR(1),
+.BR appctl-update\fR(1), " " \fBappctl-vienv\fR(1), " " \fBappctl-vifstab\fR(1)

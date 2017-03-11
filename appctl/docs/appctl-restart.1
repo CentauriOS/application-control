@@ -1,0 +1,38 @@
+.TH APPCTL-RESTART 1
+.SH NAME
+appctl restart - stops a service container if it is running, then starts it
+again.
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+restart
+\fIcontainer\fR
+.SH DESCRIPTION
+\fBappctl restart\fR will restart a service container.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SS Specific options
+.TP
+.IR container
+The container to restart.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_RESTART_OPTS
+If \fB$APPCLT_RESTART_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1)

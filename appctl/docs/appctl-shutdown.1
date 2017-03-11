@@ -1,0 +1,55 @@
+.TH APPCTL-SHUTDOWN 1
+.SH NAME
+appctl shutdown - shuts down the computer.
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+shutdown
+[\fB\-H|\-\-halt\|\-P|\-\-poweroff|\-r|\-\-reboot|\-c|\-\-cancel\fR]
+[\fB\-s|\-\-no\-wall\fR]
+[\fB\-k|\-\-dry\-run\fR]
+.SH DESCRIPTION
+\fBappctl shutdown\fR stops all services, kills all remaining processes, and
+turns off the computer.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SS Specific options
+.TP
+.BR \-H\fR, " " \fB\-\-halt\fR
+Halts the computer.
+.TP
+.BR \-P\fR, " " \fB\-\-poweroff\fR
+Turns off the computer (default).
+.TP
+.BR \-r\fR, " " \fB\-\-reboot\fR
+Restarts the computer.
+.TP
+.BR \-c\fR, " " \fB\-\-cancel\fR
+Canels a pending shutdown
+.TP
+.BR \-s\fR, " " \fB\-\-no\-wall\fR
+Does not send a message to each user warning of the shutdown.
+.TP
+.BR \-k\fR, " " \fB\-\-dry\-run\fR
+Send the message to each user, but do not actually shut down the computer.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_SHUTDOWN_OPTS
+If \fB$APPCLT_SHUTDOWN_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1)

@@ -1,0 +1,57 @@
+.TH APPCTL-AUTOSTART 1
+.SH NAME
+appctl autostart - configures an application to start automatically when the
+computer boots.
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+autostart
+\fIcontainer\fR
+[\fB\-\-enable|\-\-disable\fR]
+[\fB-a|\-\-after\fR \fIcontainer\fR]...
+[\fB-b|\-\-before\fR \fIcontainer\fR]...
+.SH DESCRIPTION
+\fBappctl autostart\fR allows the user to configure how services start during a
+system boot.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SS Specific options
+.TP
+.IR container\fR
+The container to configure for autostart.
+.TP
+.BR \-\-enable
+Specifies that the container should be enabled for autostart (default).
+.TP
+.BR \-\-disable
+Specified that the container should be disabled for autostart.  This option
+should not be used in combination with any other option.
+.TP
+.BR \-a, " " \-\-after\fR " " \fIcontainer\fR
+Waits for \fIcontainer\fR to start before starting the container that is being
+configured for autostart.
+.TP
+.BR \-b, " " \-\-before\fR " " \fIcontainer\fR
+Starts the container that is being configured for autostart before the
+\fIcontainer\fR is started.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_AUTOSTART_OPTS
+If \fB$APPCLT_AUTOSTART_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1), " " \fBappctl-init\fR(1)

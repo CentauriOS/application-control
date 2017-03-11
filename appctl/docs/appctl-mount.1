@@ -1,0 +1,55 @@
+.TH APPCTL-MOUNT 1
+.SH NAME
+appctl mount - mounts a drive or creates a link between containers.
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+mount
+[\fBhome\fR|\fBtmp\fR|\fBvar\fR|\fBroot\fR|\fIcontainer\fR:\fIpath\fR]
+\fIdestination\fR
+.SH DESCRIPTION
+\fBappctl mount\fR creates a link between two different containers or a special
+folder not associated with any container and the current container.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SS Specific options
+.TP
+.BR home
+Mounts the directory containing all of the users' home folders.
+.TP
+.BR tmp
+Mounts the system-wide temporary directory that shared temporary files (like
+sockets) should be stored in.
+.TP
+.BR var
+Mounts the variable data folder for the current container.
+.TP
+.BR root
+Mounts the root directory of the drive into another folder.
+.TP
+.IR container\fR:\fIpath\fR
+Mounts a directory from another container.
+.TP
+.IR destination
+The directory to mount to.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_MOUNT_OPTS
+If \fB$APPCLT_MOUNT_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1)

@@ -1,0 +1,43 @@
+.TH APPCTL-UPDATE 1
+.SH NAME
+appctl update - updates the software on this computer.
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+update
+[\fB\-p|\-\-priority\fR \fIpriority\fR]
+[\fIcontainer\fR]
+.SH DESCRIPTION
+\fBappctl update\fR updates the software on this computer.  It can either run
+all updates with a minimum priority, just update one container, or update every
+container that has an update available.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SS Specific options
+.TP
+.BR \-p\fR, " " \fB\-\-priority\fR " " \fIpriority\fR
+Only runs updates with a priority of at least \fIpriority\fR.
+.TP
+.IR container\fR
+Only update \fIcontainer\fR.
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_UPDATE_OPTS
+If \fB$APPCLT_UPDATE_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1)

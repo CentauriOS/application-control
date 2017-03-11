@@ -1,0 +1,33 @@
+.TH APPCTL-INIT 1
+.SH NAME
+appctl init - launches all of the software on the computer (should only be run
+once, by the system itself).
+.SH SYNOPSIS
+appctl
+[\fB\-v|\-\-verbose\fR]...
+init
+.SH DESCRIPTION
+\fBappctl init\fR boots the system and starts all of the autostarted services.
+.SH OPTIONS
+General options are written before the command, and specific options are written
+after the command.
+.SS General options
+.TP
+.BR \-v\fR, " " \fB\-\-verbose\fR
+Logs out more information (multiple \fB\-v\fR or \fB\-\-verbose\fR will result
+in even more information being logged).
+.SH ENVIRONMENT
+.TP
+.BR APPCTL_GENERAL_OPTS
+If \fB$APPCTL_GENERAL_OPTS\fR is set, the value of it will be appended to the
+general options provided from command line.
+.TP
+.BR APPCTL_INIT_OPTS
+If \fB$APPCLT_INIT_OPTS\fR is set, the value of it will be appended to the
+specific options.
+.TP
+.BR APPCTL_SOCKET
+If \fB$APPCLT_SOCKET\fR is set, its value will be used as the socket to connect
+to instead of the default socket.
+.SH SEE ALSO
+.BR appctl\fR(1), " " \fBinit\fR(1), " " \fBappctl-autostart\fR(1)
