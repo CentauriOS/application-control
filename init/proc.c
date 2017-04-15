@@ -37,7 +37,7 @@ int launch_process_generic(void *data, int (*exec)(void *)) {
             return -1;
         } else {
             errno = WEXITSTATUS(status);
-            return -1;
+            return -errno;
         }
     }
 }
