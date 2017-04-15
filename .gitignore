@@ -33,3 +33,6 @@ initrd.img
 
 # Logs
 *.log
+
+# Recovery ISO
+/recovery.iso

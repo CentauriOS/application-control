@@ -1,15 +1,23 @@
-OBJS = main.o
+OBJS = main.o fs.o net.o proc.o
 LDFLAGS += -static
 
 .PHONY: all
 all: init initrd.img
 
 init: $(OBJS)
-	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS)
 
-initrd.img: init
-	echo $< | cpio -o -H newc | gzip > $@
+initrd.img: initrd.img.txt $(shell cat initrd.img.txt)
+	cpio -o -H newc < $< | gzip > $@
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) init initrd.img
+	rm -f $(OBJS) init initrd.img recovery.iso
+
+fs.o: fs.h
+
+main.o: fs.h net.h proc.h
+
+net.o: net.h
+
+proc.o: proc.h
