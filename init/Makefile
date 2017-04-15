@@ -12,7 +12,7 @@ initrd.img: initrd.img.txt $(shell cat initrd.img.txt)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) init initrd.img recovery.iso
+	rm -f $(OBJS) init initrd.img
 
 fs.o: fs.h
 

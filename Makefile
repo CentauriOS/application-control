@@ -22,6 +22,7 @@ clean:
 	$(MAKE) -C appctl clean
 	$(MAKE) -C common clean
 	$(MAKE) -C init clean
+	rm -rf recovery.iso
 
 .PHONY: always
 always:
