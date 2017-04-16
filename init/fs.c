@@ -8,7 +8,7 @@
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "fs.h"
+#include <init/fs.h>
 
 int real_root = -1;
 

@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
-#include "net.h"
+#include <init/net.h>
 
 int start_socket() {
     int fd = socket(AF_UNIX, SOCK_STREAM, 0);

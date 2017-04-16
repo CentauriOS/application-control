@@ -4,7 +4,7 @@
 #include <sys/wait.h>
 #include <syslog.h>
 #include <unistd.h>
-#include "proc.h"
+#include <init/proc.h>
 
 int launch_process_generic(void *data, int (*exec)(void *));
 int launch_process_exec(void *data);

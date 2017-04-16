@@ -1,5 +1,6 @@
 OBJS = main.o fs.o net.o proc.o
 LDFLAGS += -static
+CFLAGS += -I..
 
 .PHONY: all
 all: init initrd.img

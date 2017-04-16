@@ -3,9 +3,9 @@
 #include <sys/reboot.h>
 #include <syslog.h>
 #include <unistd.h>
-#include "fs.h"
-#include "net.h"
-#include "proc.h"
+#include <init/fs.h>
+#include <init/net.h>
+#include <init/proc.h>
 
 void hang();
 void launch_recovery();
