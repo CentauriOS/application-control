@@ -30,6 +30,7 @@
 /appctl/appctl
 /init/init
 initrd.img
+/recover/recover
 
 # Logs
 *.log
