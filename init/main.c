@@ -3,6 +3,7 @@
 #include <sys/reboot.h>
 #include <syslog.h>
 #include <unistd.h>
+#include <common/paths.h>
 #include <init/fs.h>
 #include <init/net.h>
 #include <init/proc.h>
@@ -13,13 +14,13 @@ void launch_recovery();
 int main(int argc, const char **argv) {
     openlog("init", LOG_CONS | LOG_NDELAY, LOG_DAEMON);
     if (mount_devfs() < 0) {
-        syslog(LOG_EMERG, "Failed to mount /dev: %s", strerror(errno));
+        syslog(LOG_EMERG, "Failed to mount " DEVICES_DIR ": %s", strerror(errno));
     } else if (mount_all() < 0) {
         syslog(LOG_CRIT, "Failed to mount all filesystems: %s", strerror(errno));
         launch_recovery(0);
     } else {
         syslog(LOG_INFO, "Launching initial container...");
-        if (launch_process1("/data/com.github.centaurios.application-control/bin/appctl", "init") < 0) {
+        if (launch_process1(DATA_DIR "/" START_CONTAINER START_APPLICATION, START_APPLICATION_PARAM) < 0) {
             syslog(LOG_EMERG, "Failed to launch container: %s", strerror(errno));
             launch_recovery(1);
         } else {
@@ -54,7 +55,7 @@ void launch_recovery(int is_jailed) {
         syslog(LOG_EMERG, "Failed to mount recovery filesystem: %s", strerror(errno));
     } else {
         syslog(LOG_INFO, "Launching recovery tools...");
-        if (launch_process("/sbin/recover") < 0) {
+        if (launch_process(RECOVERY_APPLICATION) < 0) {
             syslog(LOG_EMERG, "Failed to launch recovery tools: %s", strerror(errno));
         }
     }

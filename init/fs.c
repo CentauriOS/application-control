@@ -8,6 +8,7 @@
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <common/paths.h>
 #include <init/fs.h>
 
 int real_root = -1;
@@ -15,8 +16,8 @@ int real_root = -1;
 int mount_entry(struct mntent *ent);
 
 int mount_devfs() {
-    if (mount("none", "/dev", "devtmpfs", 0, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to mount /dev");
+    if (mount("none", DEVICES_DIR, "devtmpfs", 0, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to mount " DEVICES_DIR);
         return -1;
     } else {
         return 0;
@@ -24,10 +25,10 @@ int mount_devfs() {
 }
 
 int mount_all() {
-    FILE *fstab = setmntent("/fstab", "r");
+    FILE *fstab = setmntent("/" FSTAB_FILE, "r");
     if (fstab) {
-        if (access("/root", F_OK) < 0 && mkdir("/root", 0777) < 0) {
-            syslog(LOG_EMERG, "Unable to create /root");
+        if (access(REAL_ROOT_DIR, F_OK) < 0 && mkdir(REAL_ROOT_DIR, 0777) < 0) {
+            syslog(LOG_EMERG, "Unable to create " REAL_ROOT_DIR);
             return -1;
         } else {
             struct mntent *ent;
@@ -35,7 +36,7 @@ int mount_all() {
                 if (strcmp(ent->mnt_dir, "/") == 0) {
                     struct mntent ent2;
                     ent2.mnt_fsname = ent->mnt_fsname;
-                    ent2.mnt_dir = "/root";
+                    ent2.mnt_dir = REAL_ROOT_DIR;
                     ent2.mnt_type = ent->mnt_type;
                     ent2.mnt_opts = ent->mnt_opts;
                     if (mount_entry(&ent2) < 0) {
@@ -46,14 +47,14 @@ int mount_all() {
                         return -1;
                     } else {
                         fseek(fstab, 0, SEEK_SET);
-                        if (mount("/dev", "/root/dev", NULL, MS_MOVE, NULL) < 0) {
-                            syslog(LOG_EMERG, "Unable to move /dev");
+                        if (mount(DEVICES_DIR, REAL_ROOT_DIR DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                            syslog(LOG_EMERG, "Unable to move " DEVICES_DIR);
                             return -1;
-                        } else if (chdir("/root") < 0) {
-                            syslog(LOG_EMERG, "Unable to chdir into /root");
+                        } else if (chdir(REAL_ROOT_DIR) < 0) {
+                            syslog(LOG_EMERG, "Unable to chdir into " REAL_ROOT_DIR);
                             int e = errno;
-                            if (mount("/root/dev", "/dev", NULL, MS_MOVE, NULL) < 0) {
-                                syslog(LOG_CRIT, "Unable to move /dev back");
+                            if (mount(REAL_ROOT_DIR DEVICES_DIR, DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                                syslog(LOG_CRIT, "Unable to move " DEVICES_DIR " back");
                                 mount_devfs();
                             }
                             errno = e;
@@ -61,8 +62,8 @@ int mount_all() {
                         } else if (mount(".", "/", NULL, MS_MOVE, NULL) < 0) {
                             syslog(LOG_EMERG, "Unable to switch roots");
                             int e = errno;
-                            if (mount("/root/dev", "/dev", NULL, MS_MOVE, NULL) < 0) {
-                                syslog(LOG_CRIT, "Unable to move /dev back");
+                            if (mount(REAL_ROOT_DIR DEVICES_DIR, DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                                syslog(LOG_CRIT, "Unable to move " DEVICES_DIR " back");
                                 mount_devfs();
                             }
                             errno = e;
@@ -75,8 +76,8 @@ int mount_all() {
                             if (chroot(".") < 0) {
                                 syslog(LOG_EMERG, "Unable to chroot");
                                 int e = errno;
-                                if (mount("/root/dev", "/dev", NULL, MS_MOVE, NULL) < 0) {
-                                    syslog(LOG_CRIT, "Unable to move /dev back");
+                                if (mount(REAL_ROOT_DIR DEVICES_DIR, DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                                    syslog(LOG_CRIT, "Unable to move " DEVICES_DIR " back");
                                     mount_devfs();
                                 }
                                 errno = e;
@@ -84,8 +85,8 @@ int mount_all() {
                             } else if (chdir("/") < 0) {
                                 syslog(LOG_EMERG, "Unable to chdir into /");
                                 int e = errno;
-                                if (mount("/root/dev", "/dev", NULL, MS_MOVE, NULL) < 0) {
-                                    syslog(LOG_CRIT, "Unable to move /dev back");
+                                if (mount(REAL_ROOT_DIR DEVICES_DIR, DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                                    syslog(LOG_CRIT, "Unable to move " DEVICES_DIR " back");
                                     mount_devfs();
                                 }
                                 errno = e;
@@ -97,8 +98,8 @@ int mount_all() {
                                             int e = errno;
                                             syslog(LOG_EMERG, "Unable to mount filesystem %s", ent->mnt_fsname);
                                             endmntent(fstab);
-                                            if (mount("/root/dev", "/dev", NULL, MS_MOVE, NULL) < 0) {
-                                                syslog(LOG_CRIT, "Unable to move /dev back");
+                                            if (mount(REAL_ROOT_DIR DEVICES_DIR, DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+                                                syslog(LOG_CRIT, "Unable to move " DEVICES_DIR " back");
                                                 mount_devfs();
                                             }
                                             errno = e;
@@ -134,21 +135,21 @@ int mount_recovery(int is_jailed) {
             syslog(LOG_EMERG, "Unable to chroot back to the real /");
             return -1;
         } else if (mount_devfs() < 0) {
-            syslog(LOG_EMERG, "Unable to remount /dev");
+            syslog(LOG_EMERG, "Unable to remount " DEVICES_DIR);
             return -1;
         }
     }
-    if (access("/recovery", F_OK) < 0 && mkdir("/recovery", 0777) < 0) {
-        syslog(LOG_EMERG, "Unable to create /recovery");
+    if (access(RECOVERY_ROOT_DIR, F_OK) < 0 && mkdir(RECOVERY_ROOT_DIR, 0777) < 0) {
+        syslog(LOG_EMERG, "Unable to create " RECOVERY_ROOT_DIR);
         return -1;
-    } else if (mount("/recovery.iso", "/recovery", "ext4", MS_RDONLY, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to mount /recovery.iso");
+    } else if (mount("/" RECOVERY_IMAGE, RECOVERY_ROOT_DIR, "ext4", MS_RDONLY, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to mount /" RECOVERY_IMAGE);
         return -1;
-    } else if (mount("/dev", "/recovery/dev", NULL, MS_MOVE, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to move /dev");
+    } else if (mount(DEVICES_DIR, RECOVERY_ROOT_DIR DEVICES_DIR, NULL, MS_MOVE, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to move " DEVICES_DIR);
         return -1;
-    } else if (chdir("/recovery") < 0) {
-        syslog(LOG_EMERG, "Unable to chdir into /recovery");
+    } else if (chdir(RECOVERY_ROOT_DIR) < 0) {
+        syslog(LOG_EMERG, "Unable to chdir into " RECOVERY_ROOT_DIR);
         return -1;
     } else if (mount(".", "/", NULL, MS_MOVE, NULL) < 0) {
         syslog(LOG_EMERG, "Unable to switch roots");
@@ -159,14 +160,14 @@ int mount_recovery(int is_jailed) {
     } else if (chdir("/") < 0) {
         syslog(LOG_EMERG, "Unable to chdir into /");
         return -1;
-    } else if (mount("none", "/tmp", "tmpfs", 0, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to mount /tmp");
+    } else if (mount("none", RECOVERY_TMP_DIR, "tmpfs", 0, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to mount " RECOVERY_TMP_DIR);
         return -1;
-    } else if (mount("none", "/proc", "proc", 0, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to mount /proc");
+    } else if (mount("none", RECOVERY_PROC_DIR, "proc", 0, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to mount " RECOVERY_PROC_DIR);
         return -1;
-    } else if (mount("none", "/sys", "sysfs", 0, NULL) < 0) {
-        syslog(LOG_EMERG, "Unable to mount /sys");
+    } else if (mount("none", RECOVERY_SYS_DIR, "sysfs", 0, NULL) < 0) {
+        syslog(LOG_EMERG, "Unable to mount " RECOVERY_SYS_DIR);
         return -1;
     } else {
         return 0;
@@ -181,16 +182,16 @@ int cleanup_recovery() {
     } else {
         int r = 0;
         int e = 0;
-        if (unlink("recovery.iso") < 0) {
-            syslog(LOG_WARNING, "Unable to remove /recovery.iso");
+        if (unlink(RECOVERY_IMAGE) < 0) {
+            syslog(LOG_WARNING, "Unable to remove /" RECOVERY_IMAGE);
             e = r == 0 ? errno : e;
             r = -1;
-        } else if (unlink("init") < 0) {
-            syslog(LOG_WARNING, "Unable to remove /init");
+        } else if (unlink(INIT_FILE) < 0) {
+            syslog(LOG_WARNING, "Unable to remove /" INIT_FILE);
             e = r == 0 ? errno : e;
             r = -1;
-        } else if (unlink("fstab") < 0) {
-            syslog(LOG_WARNING, "Unable to remove /fstab");
+        } else if (unlink(FSTAB_FILE) < 0) {
+            syslog(LOG_WARNING, "Unable to remove /" FSTAB_FILE);
             e = r == 0 ? errno : e;
             r = -1;
         } else if (close(real_root) < 0) {

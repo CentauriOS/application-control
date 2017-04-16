@@ -15,10 +15,10 @@ initrd.img: initrd.img.txt $(shell cat initrd.img.txt)
 clean:
 	rm -f $(OBJS) init initrd.img
 
-fs.o: fs.h
+fs.o: fs.h ../common/paths.h
 
-main.o: fs.h net.h proc.h
+main.o: fs.h net.h proc.h ../common/paths.h
 
-net.o: net.h
+net.o: net.h ../common/paths.h
 
 proc.o: proc.h

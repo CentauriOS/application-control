@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <common/paths.h>
 #include <init/net.h>
 
 int start_socket() {
@@ -16,7 +17,7 @@ int start_socket() {
     struct sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_UNIX;
-    memcpy(addr.sun_path, "/tmp/.centauri", strlen("/tmp/.centauri"));
+    memcpy(addr.sun_path, CONTROL_SOCKET_PATH, strlen(CONTROL_SOCKET_PATH));
     if (bind(fd, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
         syslog(LOG_EMERG, "Unable to bind control socket: %s", strerror(errno));
         return -1;
