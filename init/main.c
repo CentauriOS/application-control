@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <common/paths.h>
 #include <init/fs.h>
-#include <init/net.h>
 #include <init/proc.h>
 
 void hang();
@@ -28,15 +27,6 @@ int main(int argc, const char **argv) {
             syslog(LOG_INFO, "Initial container is running.");
             if (cleanup_recovery() < 0) {
                 syslog(LOG_WARNING, "Unable to clean up recovery files: %s", strerror(errno));
-            }
-            if (start_socket() < 0) {
-                syslog(LOG_EMERG, "Socket controller failed: %s", strerror(errno));
-            } else {
-                syslog(LOG_INFO, "Shutting down system.");
-                sync();
-                if (reboot(RB_POWER_OFF) < 0) {
-                    syslog(LOG_CRIT, "Unable to shut down system: %s", strerror(errno));
-                }
             }
         }
     }

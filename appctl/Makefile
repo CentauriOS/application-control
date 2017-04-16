@@ -1,4 +1,4 @@
-OBJS = main.o options.o autostart/command.o create/command.o init/command.o install/command.o invoke/command.o mount/command.o pullf/command.o pushf/command.o reload/command.o restart/command.o shutdown/command.o start/command.o stop/command.o update/command.o vienv/command.o vifstab/command.o init/initsock.o
+OBJS = main.o options.o autostart/command.o create/command.o init/command.o install/command.o invoke/command.o mount/command.o pullf/command.o pushf/command.o reload/command.o restart/command.o shutdown/command.o start/command.o stop/command.o update/command.o vienv/command.o vifstab/command.o
 LDFLAGS += -static
 CFLAGS += -I..
 CXXFLAGS += -I..
@@ -21,7 +21,7 @@ autostart/command.o: commands.hpp options.hpp
 
 create/command.o: commands.hpp options.hpp
 
-init/command.o: commands.hpp options.hpp init/initsock.hpp
+init/command.o: commands.hpp options.hpp
 
 install/command.o: commands.hpp options.hpp
 
@@ -48,5 +48,3 @@ update/command.o: commands.hpp options.hpp
 vienv/command.o: commands.hpp options.hpp
 
 vifstab/command.o: commands.hpp options.hpp
-
-init/initsock.o: init/initsock.hpp ../common/paths.h

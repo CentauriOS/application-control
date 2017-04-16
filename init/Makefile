@@ -1,4 +1,4 @@
-OBJS = main.o fs.o net.o proc.o
+OBJS = main.o fs.o proc.o
 LDFLAGS += -static
 CFLAGS += -I..
 
@@ -17,8 +17,6 @@ clean:
 
 fs.o: fs.h ../common/paths.h
 
-main.o: fs.h net.h proc.h ../common/paths.h
-
-net.o: net.h ../common/paths.h
+main.o: fs.h proc.h ../common/paths.h
 
 proc.o: proc.h
