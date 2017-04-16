@@ -35,5 +35,6 @@ initrd.img
 # Logs
 *.log
 
-# Recovery ISO
+# Drives
+/disk.iso
 /recovery.iso

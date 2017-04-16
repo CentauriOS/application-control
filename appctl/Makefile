@@ -1,4 +1,5 @@
 OBJS = main.o
+LDFLAGS += -static
 
 .PHONY: all
 all: appctl
