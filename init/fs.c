@@ -220,8 +220,8 @@ int mount_entry(struct mntent *ent) {
     char *instart = inpos;
     char *outpos = data;
     int fail = 1;
-    while (inpos < inend) {
-        if (*inpos == ',') {
+    while (inpos <= inend) {
+        if (*inpos == ',' || *inpos == 0) {
             if (strncmp("async", instart, inpos - instart) == 0) {
                 mountflags &= ~MS_SYNCHRONOUS;
             } else if (strncmp("atime", instart, inpos - instart) == 0) {
@@ -290,9 +290,8 @@ int mount_entry(struct mntent *ent) {
                     *data++ = *instart++;
                 }
             }
-        } else {
-            ++inpos;
         }
+        ++inpos;
     }
     *outpos = 0;
     int r = mount(ent->mnt_fsname, ent->mnt_dir, ent->mnt_type, mountflags, data);
