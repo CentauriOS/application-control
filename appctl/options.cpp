@@ -1,9 +1,8 @@
 #include <cstring>
 #include <errno.h>
-#include <iostream>
 #include <appctl/commands.hpp>
 #include <appctl/options.hpp>
-using namespace std;
+#include <appctl/log.hpp>
 using namespace centauri::appctl::common::commands;
 
 namespace centauri {
@@ -88,7 +87,7 @@ namespace centauri {
                     } else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
                         if ((globalOptions & GLOBAL_OPTION_VERBOSE) == GLOBAL_OPTION_VERBOSE) {
                             if (!overlyVerbose) {
-                                cerr << "Too many " << argv[i] << " options (ignoring the rest)" << endl;
+                                log::promptFormat("Too many %s options (ignoring the rest)", argv[i]);
                                 overlyVerbose = true;
                             }
                         } else {
@@ -128,7 +127,7 @@ namespace centauri {
 #undef COMMAND
                     // Handle unknown arguments
                     else {
-                        cerr << "Unable to parse " << argv[i] << endl;
+                        log::promptFormat("Unable to parse %s", argv[i]);
                         globalOptions = GLOBAL_OPTION_HELP;
                         command = NULL;
                         commandOptions = NULL;
@@ -138,7 +137,7 @@ namespace centauri {
                 }
                 if (commandOptions == NULL) {
                     if ((globalOptions & GLOBAL_OPTION_HELP) == 0) {
-                        cerr << "No command found" << endl;
+                        log::prompt("No command found");
                         globalOptions = GLOBAL_OPTION_HELP;
                         errno = EINVAL;
                     } else {
@@ -163,6 +162,10 @@ namespace centauri {
 
             command_t *options::getCommandInstance() {
                 return commandObj;
+            }
+
+            int options::getLoggingVerbosity() {
+                return (globalOptions & GLOBAL_OPTION_VERBOSE) / GLOBAL_OPTION_LOG;
             }
         }
     }

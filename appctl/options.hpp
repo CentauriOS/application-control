@@ -127,6 +127,7 @@ namespace centauri {
                     const char *getCommand();
                     commandOptions_t *getCommandOptions();
                     command_t *getCommandInstance();
+                    int getLoggingVerbosity();
                 
                 private:
                     int globalOptions;

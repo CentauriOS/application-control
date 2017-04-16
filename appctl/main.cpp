@@ -1,25 +1,27 @@
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
-#include <iostream>
 #include <appctl/options.hpp>
 #include <appctl/commands.hpp>
-using namespace std;
+#include <appctl/log.hpp>
+using namespace centauri::appctl;
 using namespace centauri::appctl::common;
 
 int main(int argc, const char **argv) {
     options_t options(argc - 1, argv + 1);
     if (errno != 0) {
-        cerr << "Unable to parse arguments: " << strerror(errno) << endl;
+        log::error(LOG_EMERG, "Unable to parse arguments: %s");
         return EXIT_FAILURE;
     }
+    log::setVerbosity(options.getLoggingVerbosity());
     if (options.helpRequested()) {
-        cerr << "Function not implemented" << endl;
+        errno = ENOSYS;
+        log::error(LOG_CRIT, "Unable to show help: %s");
         return EXIT_FAILURE;
     } else {
         errno = options.getCommandInstance()->run(options.getCommandOptions());
         if (errno != 0) {
-            cerr << "Error running command: " << strerror(errno) << endl;
+            log::error(LOG_CRIT, "Error running command: %s");
             return EXIT_FAILURE;
         }
     }
