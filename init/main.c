@@ -21,30 +21,11 @@ int main(int argc, const char **argv) {
         launch_recovery(0);
     } else {
         syslog(LOG_INFO, "Launching initial container...");
-        int root = open("/", O_RDONLY);
-        if (root < 0) {
-            syslog(LOG_CRIT, "Unable to open /: %s", strerror(errno));
-        }
-        if (chdir(DATA_DIR "/" START_CONTAINER) < 0) {
-            syslog(LOG_EMERG, "Unable to chdir to initial container: %s", strerror(errno));
-            launch_recovery(1);
-        } else if (chroot(".") < 0) {
-            syslog(LOG_EMERG, "Failed to chroot to initial container: %s", strerror(errno));
-            launch_recovery(1);
-        } else if (launch_process1(START_APPLICATION, START_APPLICATION_PARAM) < 0) {
+        if (launch_process1(START_APPLICATION, DATA_DIR "/" START_CONTAINER, START_APPLICATION_PARAM) < 0) {
             syslog(LOG_EMERG, "Failed to launch container: %s", strerror(errno));
-            if (fchdir(root) < 0) {
-                syslog(LOG_EMERG, "Failed to chdir back to the real /: %s", strerror(errno));
-            } else if (chroot(".") < 0) {
-                syslog(LOG_EMERG, "Failed to chroot back to the real /: %s", strerror(errno));
-            } else {
-                launch_recovery(1);
-            }
+            launch_recovery(1);
         } else {
             syslog(LOG_INFO, "Initial container is running.");
-            if (close(root) < 0) {
-                syslog(LOG_WARNING, "Unable to close /: %s", strerror(errno));
-            }
             if (cleanup_recovery() < 0) {
                 syslog(LOG_WARNING, "Unable to clean up recovery files: %s", strerror(errno));
             }

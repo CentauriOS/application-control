@@ -6,24 +6,27 @@
 #include <unistd.h>
 #include <init/proc.h>
 
-int launch_process_generic(void *data, int (*exec)(void *));
+int launch_process_generic(void *data, const char *chroot, int (*exec)(void *));
 int launch_process_exec(void *data);
 int launch_process_exec1(void *data);
 
 int launch_process(const char *path) {
-    return launch_process_generic((char *) path, launch_process_exec);
+    return launch_process_generic((char *) path, NULL, launch_process_exec);
 }
 
-int launch_process1(const char *path, const char *arg1) {
+int launch_process1(const char *path, const char *chroot, const char *arg1) {
     void *data[2];
     data[0] = (char *) path;
     data[1] = (char *) arg1;
-    return launch_process_generic(data, launch_process_exec1);
+    return launch_process_generic(data, chroot, launch_process_exec1);
 }
 
-int launch_process_generic(void *data, int (*exec)(void *)) {
+int launch_process_generic(void *data, const char *root, int (*exec)(void *)) {
     pid_t pid = fork();
     if (pid == 0) {
+        if (root != NULL) {
+            chroot(root);
+        }
         if (exec(data) < 0) {
             exit(errno);
         }
