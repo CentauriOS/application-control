@@ -174,27 +174,40 @@ int mount_recovery(int is_jailed) {
 }
 
 int cleanup_recovery() {
-    int r = 0;
-    int e = 0;
-    if (unlink("/recovery.iso") < 0) {
-        syslog(LOG_WARNING, "Unable to remove /recovery.iso");
-        e = r == 0 ? errno : e;
-        r = -1;
-    } else if (unlink("/init") < 0) {
-        syslog(LOG_WARNING, "Unable to remove /init");
-        e = r == 0 ? errno : e;
-        r = -1;
-    } else if (unlink("/fstab") < 0) {
-        syslog(LOG_WARNING, "Unable to remove /fstab");
-        e = r == 0 ? errno : e;
-        r = -1;
-    } else if (close(real_root) < 0) {
-        syslog(LOG_WARNING, "Unable to close /");
-        e = r == 0 ? errno : e;
-        r = -1;
+    int cwdfd = open(".", O_RDONLY);
+    if (fchdir(real_root) < 0) {
+        syslog(LOG_WARNING, "Unable to chdir back to the real /");
+        return -1;
+    } else {
+        int r = 0;
+        int e = 0;
+        if (unlink("recovery.iso") < 0) {
+            syslog(LOG_WARNING, "Unable to remove /recovery.iso");
+            e = r == 0 ? errno : e;
+            r = -1;
+        } else if (unlink("init") < 0) {
+            syslog(LOG_WARNING, "Unable to remove /init");
+            e = r == 0 ? errno : e;
+            r = -1;
+        } else if (unlink("fstab") < 0) {
+            syslog(LOG_WARNING, "Unable to remove /fstab");
+            e = r == 0 ? errno : e;
+            r = -1;
+        } else if (close(real_root) < 0) {
+            syslog(LOG_WARNING, "Unable to close /");
+            e = r == 0 ? errno : e;
+            r = -1;
+        } else if (fchdir(cwdfd) < 0) {
+            syslog(LOG_EMERG, "Unable to chdir back to the fake /");
+            return -1;
+        } else if (close(cwdfd) < 0) {
+            syslog(LOG_WARNING, "Unable to close fake /");
+            e = r == 0 ? errno : e;
+            r = -1;
+        }
+        errno = e;
+        return r;
     }
-    errno = e;
-    return r;
 }
 
 int mount_entry(struct mntent *ent) {
