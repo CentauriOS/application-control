@@ -31,6 +31,8 @@ int start_socket() {
         return cfd;
     }
     // ... //
+    write(cfd, "Hello, world!\n", strlen("Hello, world!\n"));
+    // ... //
     close(cfd);
     close(fd);
     return 0;

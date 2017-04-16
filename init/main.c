@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <string.h>
+#include <sys/reboot.h>
 #include <syslog.h>
 #include <unistd.h>
 #include "fs.h"
@@ -30,6 +31,10 @@ int main(int argc, const char **argv) {
                 syslog(LOG_EMERG, "Socket controller failed: %s", strerror(errno));
             } else {
                 syslog(LOG_INFO, "Shutting down system.");
+                sync();
+                if (reboot(RB_POWER_OFF) < 0) {
+                    syslog(LOG_CRIT, "Unable to shut down system: %s", strerror(errno));
+                }
             }
         }
     }
