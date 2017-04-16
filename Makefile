@@ -34,7 +34,7 @@ always:
 
 .PHONY: run
 run: init/initrd.img recovery.iso
-	$(SUDO) qemu-system-x86_64 -kernel $(KERNEL) -initrd $< -nographic -append "console=ttyS0" -drive "format=raw,file=recovery.iso" | tee serial.log
+	$(SUDO) qemu-system-x86_64 -kernel $(KERNEL) -initrd $< -nographic -append "console=ttyS0" -drive "format=raw,file=recovery.iso" -drive "format=raw,file=recovery.iso" | tee serial.log
 
 recovery.iso: recover/recover
 	mkdir -p mnt

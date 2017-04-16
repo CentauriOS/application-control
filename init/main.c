@@ -15,14 +15,17 @@ int main(int argc, const char **argv) {
         syslog(LOG_EMERG, "Failed to mount /dev: %s", strerror(errno));
     } else if (mount_all() < 0) {
         syslog(LOG_CRIT, "Failed to mount all filesystems: %s", strerror(errno));
-        launch_recovery();
+        launch_recovery(0);
     } else {
         syslog(LOG_INFO, "Launching initial container...");
         if (launch_process1("/data/com.github.centaurios.application-control/bin/appctl", "init") < 0) {
             syslog(LOG_EMERG, "Failed to launch container: %s", strerror(errno));
-            launch_recovery();
+            launch_recovery(1);
         } else {
             syslog(LOG_INFO, "Initial container is running.");
+            if (cleanup_recovery() < 0) {
+                syslog(LOG_WARNING, "Unable to clean up recovery files: %s", strerror(errno));
+            }
             if (start_socket() < 0) {
                 syslog(LOG_EMERG, "Socket controller failed: %s", strerror(errno));
             } else {
@@ -41,8 +44,8 @@ void hang() {
     }
 }
 
-void launch_recovery() {
-    if (mount_recovery() < 0) {
+void launch_recovery(int is_jailed) {
+    if (mount_recovery(is_jailed) < 0) {
         syslog(LOG_EMERG, "Failed to mount recovery filesystem: %s", strerror(errno));
     } else {
         syslog(LOG_INFO, "Launching recovery tools...");
