@@ -1,7 +1,8 @@
 # fstab: static file system information.
 #
-# <file system>     <mount point>       <type>  <options>       <dump>  <pass>
-/dev/sdb            /                   ext4    defaults        0       0
-none                /proc               proc    defaults        0       0
-none                /sys                sysfs   defaults        0       0
-none                /tmp                tmpfs   defaults        0       0
+# <file system>     <mount point>                                       <type>  <options>       <dump>  <pass>
+/dev/sdb            /                                                   ext4    defaults        0       0
+none                /proc                                               proc    defaults        0       0
+none                /sys                                                sysfs   defaults        0       0
+none                /tmp                                                tmpfs   defaults        0       0
+/tmp                /data/com.github.centaurios.application-control/tmp none    bind            0       0
