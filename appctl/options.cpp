@@ -19,7 +19,7 @@ namespace centauri {
                 }
 
                 int initOpts::load(int argc, const char **argv) {
-                    return ENOSYS;
+                    return 0;
                 }
 
                 int installOpts::load(int argc, const char **argv) {
