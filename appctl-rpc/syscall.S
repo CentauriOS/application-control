@@ -1,12 +1,25 @@
-.globl close
 .globl chmod
+.globl close
+.globl connect
+.globl getgid
+.globl getuid
 .globl lseek
 .globl open
 .globl read
 .globl rename
+.globl sendmsg
+.globl socket
 .globl stat
 .globl unlink
 .globl write
+
+chmod:
+    mov $90, %rax
+    syscall
+    neg %rax
+    mov %rax, _errno
+    neg %rax
+    ret
 
 close:
     mov $3, %rax
@@ -16,8 +29,24 @@ close:
     neg %rax
     ret
 
-chmod:
-    mov $90, %rax
+connect:
+    mov $42, %rax
+    syscall
+    neg %rax
+    mov %rax, _errno
+    neg %rax
+    ret
+
+getgid:
+    mov $104, %rax
+    syscall
+    neg %rax
+    mov %rax, _errno
+    neg %rax
+    ret
+
+getuid:
+    mov $102, %rax
     syscall
     neg %rax
     mov %rax, _errno
@@ -50,6 +79,22 @@ read:
 
 rename:
     mov $82, %rax
+    syscall
+    neg %rax
+    mov %rax, _errno
+    neg %rax
+    ret
+
+sendmsg:
+    mov $46, %rax
+    syscall
+    neg %rax
+    mov %rax, _errno
+    neg %rax
+    ret
+
+socket:
+    mov $41, %rax
     syscall
     neg %rax
     mov %rax, _errno

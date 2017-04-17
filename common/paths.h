@@ -1,6 +1,8 @@
 #ifndef CENTAURI_PATHS_H
 #define CENTAURI_PATHS_H
 
+#define APPCTL_SOCKET "/.centauri"
+
 #define INIT_FILE "init"
 #define FSTAB_FILE "fstab"
 #define RECOVERY_IMAGE "recovery.iso"
