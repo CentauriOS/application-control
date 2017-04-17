@@ -4,11 +4,15 @@ DISK_SIZE = 2G
 SUDO = sudo
 
 .PHONY: all
-all: appctl/appctl init/init init/initrd.img recover/recover recovery.iso disk.iso
+all: appctl/appctl appctl-rpc/appctl init/init init/initrd.img recover/recover recovery.iso disk.iso
 
 appctl/appctl: always
 	$(MAKE) -C common all
 	$(MAKE) -C appctl appctl
+
+appctl-rpc/appctl: always
+	$(MAKE) -C common all
+	$(MAKE) -C appctl-rpc all
 
 init/init: always
 	$(MAKE) -C common all
@@ -25,6 +29,7 @@ recover/recover: always
 .PHONY: clean
 clean:
 	$(MAKE) -C appctl clean
+	$(MAKE) -C appctl-rpc clean
 	$(MAKE) -C common clean
 	$(MAKE) -C init clean
 	$(MAKE) -C recover clean
