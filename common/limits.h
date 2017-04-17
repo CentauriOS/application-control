@@ -1,0 +1,7 @@
+#ifndef CENTAURI_LIMITS_H
+#define CENTAURI_LIMITS_H
+
+#define MAX_CONTAINER_NAME 128
+#define MAX_RPC_COMMAND_LENGTH 128
+
+#endif

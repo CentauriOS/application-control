@@ -1,6 +1,5 @@
-OBJS = main.o wrapper.o
-LDFLAGS += -static
-CFLAGS += -I..
+OBJS = main.o wrapper.o string.o errno.o substart.o syscall.o
+CFLAGS += -I.. -Os -nostdlib
 
 .PHONY: all
 all: appctl
@@ -16,6 +15,8 @@ appctl: $(OBJS)
 clean:
 	rm -f $(OBJS) appctl
 
-main.o: wrapper.h
+main.o: wrapper.h string.h
 
-wrapper.o: wrapper.h
+wrapper.o: wrapper.h string.h ../common/limits.h
+
+string.o: string.h
