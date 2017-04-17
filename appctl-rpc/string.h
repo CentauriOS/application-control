@@ -1,5 +1,6 @@
 #ifndef CENTAURI_STRING_H
 #define CENTAURI_STRING_H
+#include <string.h>
 
 int streq(const char *s1, const char *s2);
 

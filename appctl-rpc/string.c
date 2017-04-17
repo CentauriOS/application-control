@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <unistd.h>
 #include <appctl-rpc/string.h>
 
@@ -18,5 +19,7 @@ size_t strlen(const char *str) {
 }
 
 void writestr(int fd, const char *str) {
+    int e = errno;
     write(fd, str, strlen(str));
+    errno = e;
 }
